@@ -26,7 +26,7 @@ def clean(num_urls):
 		url0 = str(i[1])
 
 		#check if url exists
-		if url0 != '[]' and url0 != 'nan' or None :
+		if url0 != '[]' and url0 != 'nan' and url0 is not '' :
 
 			#remove json config
 			url1 = url0.replace("\\", "")
@@ -50,11 +50,12 @@ def clean(num_urls):
 #request the json pixel url
 def req_url(url3, i):
 	try:
-		status = requests.get(url3, timeout=1)
+		status = requests.head(url3, timeout=1)
 		#print(status)
 		if status.ok:
 			global success
 			success += 1
+			
 		else:
 			global fails
 			fails += 1	
@@ -94,7 +95,7 @@ if __name__ == '__main__':
 	tactics = pd.read_csv("tactic.csv")
 
 	#get numbered json urls
-	num_urls = enumerate(tactics['impression_pixel_json'][:50])
+	num_urls = enumerate(tactics['impression_pixel_json'])
 	clean(num_urls)
 	results(success, failures_id, failures_url, exceptions_id, exceptions_url)
 
@@ -105,15 +106,12 @@ if __name__ == '__main__':
 	print('Blanks: ' + str(blanks))
 	endtime = time.time()
 
+	failures = zip(failures_id,failures_url)
+	print(failures)
+			#print('Json_URL: ' + j[1])
+
 	#get ending time, print difference to get total run time
 	seconds = (timenow - endtime)
 	print(seconds)
-
-	#quit()
-
-
-
-
-
 
 
